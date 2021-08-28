@@ -4,21 +4,26 @@ from architectures import *
 from Utilities import Utils,TabularDataset,loadDataNN
 from torch.utils.data import Dataset,DataLoader
 from sklearn.metrics import accuracy_score
+from tqdm import tqdm
 
 class BinaryClassifier(torch.nn.Module):
     def __init__(self,architecture):
         super().__init__()
         architectures = {"tab":tabularClassifier,"img":imageClassifier}
         self.layers = architectures[architecture]
+    
     def forward(self,X):
         return self.layers(X)
 
-def train(model,trainDataLoader,testDataLoader,epochs=500,lr=0.01):
+def train(model,trainDataLoader,valDataLoader,epochs=100,lr=0.001):
     criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(),lr)
-    losses = []
+    trainLoss = []
+    valLoss = []
 
-    for epoch in range(epochs):
+    for epoch in tqdm(range(epochs)):
+        trainLossEpoch = []
+        valLossEpoch = []
         for X,y in trainDataLoader:
             optimizer.zero_grad()
             yHat = model(X)
@@ -27,8 +32,14 @@ def train(model,trainDataLoader,testDataLoader,epochs=500,lr=0.01):
             optimizer.step()
             #print(f"Accuracy:{accuracy(model,X,y)}")
             #print(f"{epoch}:{loss.item()}")
-            losses.append(loss.item())
-    return losses
+            trainLossEpoch.append(loss.item())
+            losses = []
+            for X1,y1 in valDataLoader:
+                losses.append(criterion(model(X1).squeeze(),y1.squeeze()).item())
+            valLossEpoch.append(np.mean(losses))
+        trainLoss.append(np.mean(trainLossEpoch))
+        valLoss.append(np.mean(valLossEpoch))
+    return trainLoss,valLoss
 
 def accuracy(model,dataloader):
     accuracies = []
@@ -37,9 +48,5 @@ def accuracy(model,dataloader):
         accuracies.append(accuracy_score(yHat.numpy(),y.numpy()))
     return np.mean(accuracies)
 
-utilities = Utils()
-test = BinaryClassifier("tab")
-trainDataLoader,validationDataLoader,testDataLoader = loadDataNN()
-losses = train(test,trainDataLoader,validationDataLoader)
-print(accuracy(test,validationDataLoader))
+
 
