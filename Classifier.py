@@ -1,39 +1,45 @@
 import torch
-from architectures import SimpleClassifierArchitecture
-from Utilities import Utils,TabularDataset
+import numpy as np
+from architectures import *
+from Utilities import Utils,TabularDataset,loadDataNN
 from torch.utils.data import Dataset,DataLoader
+from sklearn.metrics import accuracy_score
 
-class SimpleClassifier(torch.nn.Module):
-    def __init__(self):
+class BinaryClassifier(torch.nn.Module):
+    def __init__(self,architecture):
         super().__init__()
-        self.layers = SimpleClassifierArchitecture
-
+        architectures = {"tab":tabularClassifier,"img":imageClassifier}
+        self.layers = architectures[architecture]
     def forward(self,X):
         return self.layers(X)
 
-def train(model,dataLoader,epochs=100,lr=0.01):
+def train(model,trainDataLoader,testDataLoader,epochs=500,lr=0.01):
     criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(),lr)
+    losses = []
 
     for epoch in range(epochs):
-        for X,y in dataLoader:
+        for X,y in trainDataLoader:
             optimizer.zero_grad()
             yHat = model(X)
             loss = criterion(yHat.squeeze(),y.squeeze())
             loss.backward()
             optimizer.step()
-            print(f"{epoch}:{loss.item()}")
+            #print(f"Accuracy:{accuracy(model,X,y)}")
+            #print(f"{epoch}:{loss.item()}")
+            losses.append(loss.item())
+    return losses
 
-def loadDataNN():
-    X_train,X_validation,X_test,y_train,y_validation,y_test = Utils().splitData()
-    trainData = TabularDataset(X_train,y_train)
-    validationData = TabularDataset(X_validation,y_validation)
-    testData = TabularDataset(X_test,y_test)
-    trainDataLoader = DataLoader(trainData,batch_size=64,shuffle=True)
-    validationDataLoader = DataLoader(validationData,batch_size=64,shuffle=True)
-    testDataLoader = DataLoader(testData,batch_size=64,shuffle=False)
-    return trainDataLoader,validationDataLoader,testDataLoader
+def accuracy(model,dataloader):
+    accuracies = []
+    for X,y in dataloader:
+        yHat = model(X)>0.5
+        accuracies.append(accuracy_score(yHat.numpy(),y.numpy()))
+    return np.mean(accuracies)
 
-testModel = SimpleClassifier()
+utilities = Utils()
+test = BinaryClassifier("tab")
 trainDataLoader,validationDataLoader,testDataLoader = loadDataNN()
-train(testModel,trainDataLoader)
+losses = train(test,trainDataLoader,validationDataLoader)
+print(accuracy(test,validationDataLoader))
+
