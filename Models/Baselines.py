@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from scipy import stats
-from Utilities import Utils
+from Utilities.dataformater import DataFormater
 
 class Baseline():
     def __init__(self):
@@ -39,13 +39,10 @@ class Baseline():
         return model.predict(X_validation)
 
     def basline(self):
-        utilities = Utils()
+        utilities = DataFormater()
         X_train,X_validation,X_test,y_train,y_validation,y_test = utilities.splitData()
         for base in [self.mode,self.prototype,self.logisticRegression]:
             print(base.__doc__)
             yHat = base(X_train,y_train,X_validation)
             print(accuracy_score(yHat,y_validation))
             print("---------------")
-
-test = Baseline()
-test.basline()

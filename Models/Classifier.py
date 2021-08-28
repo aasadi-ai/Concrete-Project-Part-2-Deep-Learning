@@ -1,7 +1,6 @@
 import torch
 import numpy as np
 from architectures import *
-from Utilities import Utils,TabularDataset,loadDataNN
 from torch.utils.data import Dataset,DataLoader
 from sklearn.metrics import accuracy_score
 from tqdm import tqdm
@@ -38,6 +37,9 @@ def train(model,trainDataLoader,valDataLoader,epochs=100,lr=0.001):
                 losses.append(criterion(model(X1).squeeze(),y1.squeeze()).item())
             valLossEpoch.append(np.mean(losses))
         trainLoss.append(np.mean(trainLossEpoch))
+        if len(valLoss)>10:
+            if valLoss[-1]>=valLoss[-10] and valLoss[-3]>=valLoss[-10]:
+                break
         valLoss.append(np.mean(valLossEpoch))
     return trainLoss,valLoss
 

@@ -1,10 +1,13 @@
-#%%
-from Utilities import Utils
+from Utilities.dataformater import DataFormater
 import numpy as np
+import pandas as pd
 from PIL import Image
 
-def featureEngineering(df):
+def featureCreation(df):
+    utilities = DataFormater()
+    _,_,df = utilities.loadData()
     X = df.iloc[:,:-1]
+    y = df["CompressiveStrength"]
     epsilon = 0.00001
     oneVarFunctions = {"log":np.log,"sin":np.sin,"sqr":np.square}
     twoVarFunctions = {"sub":np.subtract,"prod":np.multiply,"div":np.divide}
@@ -26,23 +29,15 @@ def featureEngineering(df):
            for column3 in X.columns[:8]:
                X[f"3_{column1}-{column2}-{column3}"] = threeVarFunction(X[column1],X[column2],X[column3])
 
-    return X
+    return X,y
 
-def getImg(row):
-    max = np.amax(row)
-    min = np.amin(row)
-    rowScaled = (row-min)/(max-min)
-    row = row *255
-    img = np.reshape(row,(28,28))
+def visualizeImg(img):
+    #reshape row and scale image
+    max = np.amax(img)
+    min = np.amin(img)
+    img = (img-min)/(max-min)
+    img*=255
     return Image.fromarray(img)
 
-
-utilities = Utils()
-X,y,df = utilities.loadData()
-df = featureEngineering(df)
-testRow = np.array(df.iloc[0])
-img = getImg(testRow)
-img.thumbnail((1000,1000))
-img.show()
-
-# %%
+def winsorizeOutlier(df):
+    pass

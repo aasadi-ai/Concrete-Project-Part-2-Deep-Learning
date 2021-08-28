@@ -3,9 +3,8 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import torch
-from torch.utils.data import Dataset,DataLoader
 
-class Utils():
+class DataFormater():
     def __init__(self):
         self.currentMean = None
         self.currentStd = None
@@ -33,13 +32,3 @@ class Utils():
             self.currentStd = np.std(X,0)
         return (X-self.currentMean)/(self.currentStd+0.00001)
 
-class TabularDataset(Dataset):
-    def __init__(self,X,y):
-        self.X = torch.tensor(X).float()
-        self.y = torch.tensor(y).float()
-
-    def __len__(self):
-        return len(self.X)
-
-    def __getitem__(self,idx):
-        return self.X[idx],self.y[idx]

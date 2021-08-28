@@ -1,0 +1,49 @@
+MNIST 1 channel 28*28=784
+#yes and not-yes classification vs yes no
+
+Functions of Zero Variables ():8*2=16
+    -8 Features
+
+Functions of a single Variable (X):24*14
+    -log(x)
+    -sin(X)
+    -x^2
+    -discretize 
+
+Functions of 2 Variables (a,b):168*2
+    -a*b
+    -a/b
+    -a-b
+
+Functions of 3 Variables(a,b,c):336
+    -a^2+3b+c
+
+#Winsorize the outliers
+#Baseline:
+    -Mode (Check)
+    -Use average values for prototype and calc distance from prototype (Check)--> performance drops from 78-73 after normalizing
+    -Logistic regression w/ feature engineering 
+    -Gradient boosting/random forest etc.
+    -Simple NN using Linear and ReLU layers (check)
+
+#Convolutional NN Approach:
+    -Implement LeNet (check)
+    -Implement another convnet inception modules but for small images(if extra time)
+    -Hyperparameter tuning, dropoutRate,size of linear layers, learning rate
+    -How to arrange data in space, try a few arrangements
+        -Multiple channels
+            -Aggregates, cements+plasticizer, others
+
+    -Implement earlystopping
+    -Visualize loss curves
+    -Reorganize datasets,dataloaders,utilities etc
+    -Feauture engineering for tabular, 
+        -find 8 best features,5 best features etc.
+        -Remove outliers Winsorize
+        -Check for NaNs, zeros, +inf,-inf
+    -Test basic convnet
+    -Add extra layers
+    -Hyperparameter tuning in Google Colab
+    -Write everything in a flow in Google colab with a requirements.txt
+    -Edit notebook
+    -Create presentation Monday evening

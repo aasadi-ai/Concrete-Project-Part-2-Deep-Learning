@@ -28,17 +28,17 @@ tabularClassifier = torch.nn.Sequential(
 imageClassifier = torch.nn.Sequential(
     #1
     torch.nn.Conv2d(1,6,5),
-    torch.nn.BatchNorm2d(6),
+    #torch.nn.BatchNorm2d(6),
     torch.nn.ReLU(),
     torch.nn.MaxPool2d(2,stride=2),
     #2
     torch.nn.Conv2d(6,16,5),
-    torch.nn.BatchNorm2d(16),
+    #torch.nn.BatchNorm2d(16),
     torch.nn.ReLU(),
     torch.nn.MaxPool2d(2,stride=2),
     #3
     torch.nn.Conv2d(16,120,5),
-    torch.nn.BatchNorm2d(120),
+    #torch.nn.BatchNorm2d(120),
     torch.nn.ReLU(),
     torch.nn.MaxPool2d(2,stride=2),
     #Flatten
