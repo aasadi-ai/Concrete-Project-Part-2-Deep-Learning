@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier,VotingClassifier
+from prototypeEstimator import Prototype
 from scipy import stats
 from Utilities.dataformater import DataFormater
 
@@ -58,14 +59,13 @@ class Baseline():
         '''Ensemble'''
         model = VotingClassifier([
             ("knn",KNeighborsClassifier(n_neighbors=12)),
-            ("LogisticRegression",LogisticRegression())
-            ])
+            ("LogisticRegression",LogisticRegression()),
+            ("proto",Prototype())
+            ],voting='hard')
         model.fit(X_train,y_train)
         return model.predict(X_validation)
-        
-    def basline(self):
-        utilities = DataFormater()
-        X_train,X_validation,X_test,y_train,y_validation,y_test = utilities.preProcessing(winsorize=False,toNumpy=True)
+
+    def basline(self,X_train,X_validation,y_train,y_validation):
         for base in [self.mode,self.prototype,self.logisticRegression,self.knn,self.gradientBoosting,self.ensemble]:
             print(base.__doc__)
             yHat = base(X_train,y_train,X_validation)
@@ -73,4 +73,6 @@ class Baseline():
             print("---------------")
 
 test = Baseline()
-test.basline()
+utilities = DataFormater()
+X_train,X_validation,X_test,y_train,y_validation,y_test = utilities.preProcessing(toNumpy=True)
+test.basline(X_train,X_validation,y_train,y_validation)
