@@ -19,7 +19,7 @@ class DataFormater():
         df["CompressiveStrength"] = df["CompressiveStrength"]>= df["CompressiveStrength"].median()
         return df.iloc[:,:-1],df["CompressiveStrength"]
 
-    def splitData(self,X,y,trainSplit=0.8,testSplit=0.5):
+    def splitData(self,X,y,trainSplit=0.8,testSplit=0.5,toNumpy=False):
         #Split data into train,validation and test set
         #Add shuffle and random seed
         def split(X,y,splitPercentage):
@@ -27,9 +27,11 @@ class DataFormater():
             return X.iloc[:splitIndex].copy(),X.iloc[splitIndex:].copy(),y[:splitIndex].copy(),y[splitIndex:].copy()
         X_train,X_temp,y_train,y_temp = split(X,y,trainSplit)
         X_test,X_validation,y_test,y_validation = split(X_temp,y_temp,testSplit)
+        if toNumpy:
+            return np.array(X_train),np.array(X_validation),np.array(X_test),np.array(y_train),np.array(y_validation),np.array(y_test)
         return X_train,X_validation,X_test,y_train,y_validation,y_test
     
-    def preProcessing(self,winsorize=True,standardize=True):
+    def preProcessing(self,winsorize=False,standardize=True,toNumpy=False):
         X,y = self.loadData()
         X_train,X_validation,X_test,y_train,y_validation,y_test = self.splitData(X,y)
         if winsorize:
@@ -40,6 +42,8 @@ class DataFormater():
             X_train = self.standardize(X_train,useParams=False)
             X_validation = self.standardize(X_validation)
             X_test = self.standardize(X_test)
+        if toNumpy:
+            return np.array(X_train),np.array(X_validation),np.array(X_test),np.array(y_train),np.array(y_validation),np.array(y_test)
         return X_train,X_validation,X_test,y_train,y_validation,y_test
        
     def standardize(self,X,useParams=True):
@@ -49,7 +53,7 @@ class DataFormater():
         return (X-self.currentMean)/(self.currentStd+0.00001)
 
     def winsorizeOutlier(self,X,limits=(0.03,0.03),useParams=True):
-        X = X.copy()
+        #X = X.copy()
         def winsorize(col):
             sortedCol = col.sort_values(ascending=True)
             bottomLimit = sortedCol[int(len(sortedCol)*limits[0])]
