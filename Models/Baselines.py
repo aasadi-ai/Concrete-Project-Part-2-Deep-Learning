@@ -1,7 +1,11 @@
+import sys
+sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import GradientBoostingClassifier,VotingClassifier
 from scipy import stats
 from Utilities.dataformater import DataFormater
 
@@ -38,11 +42,35 @@ class Baseline():
         model.fit(X_train,y_train)
         return model.predict(X_validation)
 
+    def knn(self,X_train,y_train,X_validation):
+        '''KNN'''
+        model = KNeighborsClassifier(n_neighbors=12)
+        model.fit(X_train,y_train)
+        return model.predict(X_validation)
+
+    def gradientBoosting(self,X_train,y_train,X_validation):
+        '''GradientBoosting'''
+        model = GradientBoostingClassifier(n_estimators=250,max_depth=3)
+        model.fit(X_train,y_train)
+        return model.predict(X_validation)
+
+    def ensemble(self,X_train,y_train,X_validation):
+        '''Ensemble'''
+        model = VotingClassifier([
+            ("knn",KNeighborsClassifier(n_neighbors=12)),
+            ("LogisticRegression",LogisticRegression())
+            ])
+        model.fit(X_train,y_train)
+        return model.predict(X_validation)
+        
     def basline(self):
         utilities = DataFormater()
-        X_train,X_validation,X_test,y_train,y_validation,y_test = utilities.splitData()
-        for base in [self.mode,self.prototype,self.logisticRegression]:
+        X_train,X_validation,X_test,y_train,y_validation,y_test = utilities.preProcessing(winsorize=False,toNumpy=True)
+        for base in [self.mode,self.prototype,self.logisticRegression,self.knn,self.gradientBoosting,self.ensemble]:
             print(base.__doc__)
             yHat = base(X_train,y_train,X_validation)
             print(accuracy_score(yHat,y_validation))
             print("---------------")
+
+test = Baseline()
+test.basline()
