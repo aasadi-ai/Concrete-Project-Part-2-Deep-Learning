@@ -28,4 +28,6 @@ def featureCreation(X):
                X[f"3_{column1}-{column2}-{column3}"] = threeVarFunction(X[column1],X[column2],X[column3])
     return X
 
+def featureCreation_All(*X_data):
+    return tuple([featureCreation(X) for X in X_data])
 

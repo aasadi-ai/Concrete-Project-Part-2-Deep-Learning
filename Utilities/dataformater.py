@@ -52,6 +52,12 @@ class DataFormater():
             self.currentStd = X.std(0)
         return (X-self.currentMean)/(self.currentStd+0.00001)
 
+    def standardizeAll(self,*X_data,useParams=False):
+        if useParams:
+            return [self.standardize(X,True) for X in X_data]
+        temp = self.standardize(X_data[0],False)
+        return tuple([temp]+[self.standardize(X,True) for X in X_data[1:]])
+
     def winsorizeOutlier(self,X,limits=(0.03,0.03),useParams=True):
         #X = X.copy()
         def winsorize(col):
