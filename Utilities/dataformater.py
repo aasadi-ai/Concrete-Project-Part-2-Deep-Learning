@@ -19,6 +19,7 @@ class DataFormater():
         #Load Data and Rename Columns
         df = pd.read_csv("C:\\Users\\afa30\\Desktop\\concreteNet\\data\\concreteData.csv")
         df.columns = ["Cement","Slag","Ash","Water","Plasticizer","CoarseAgg","FineAgg","Age","CompressiveStrength"]
+        print(df["CompressiveStrength"].median())
         df["CompressiveStrength"] = df["CompressiveStrength"]>= df["CompressiveStrength"].median()
         return df.iloc[:,:-1],df["CompressiveStrength"]
 
