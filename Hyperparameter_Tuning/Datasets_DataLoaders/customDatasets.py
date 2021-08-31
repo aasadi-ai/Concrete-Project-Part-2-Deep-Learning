@@ -1,3 +1,5 @@
+import sys
+sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
 import numpy as np
 import pandas as pd
 import torch
@@ -15,8 +17,7 @@ class ImageFromTabular(Dataset):
             imgs.append(torch.tensor(imgScaled))
 
         self.X = torch.stack(imgs)
-        self.y = torch.tensor(y)
-        print(self.y.shape)
+        self.y = torch.tensor(np.array(y))
 
     def __len__(self):
         return len(self.X)

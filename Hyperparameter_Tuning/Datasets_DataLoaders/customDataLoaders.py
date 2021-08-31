@@ -1,9 +1,10 @@
-from customDatasets import TabularDataset,ImageFromTabular
+import sys
+sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from Hyperparameter_Tuning.Datasets_DataLoaders.customDatasets import TabularDataset
 from Utilities.dataformater import DataFormater
 from torch.utils.data import Dataset,DataLoader
 
-def dataLoaderTabular():
-    X_train,X_validation,X_test,y_train,y_validation,y_test = DataFormater().splitData()
+def dataLoaderTabular(X_train,X_validation,X_test,y_train,y_validation,y_test):
     trainData = TabularDataset(X_train,y_train)
     validationData = TabularDataset(X_validation,y_validation)
     testData = TabularDataset(X_test,y_test)

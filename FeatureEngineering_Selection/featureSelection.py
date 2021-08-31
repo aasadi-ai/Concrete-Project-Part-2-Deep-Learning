@@ -1,14 +1,3 @@
-#Hyperparameter tuning of best models and then add to ensemble
-
-#Hyperparameter tuning of simple logistic regression NN (colab)
-    #Add layers and do hyperparameter tuning again until no performance gains
-
-#if time:
-    #Add random seed for split function, Add random seed for RFE
-    #Test CNN Classifier
-    # Add kernels and do hyperparameter tuning of CNN (colab)
-
-#Tuesday Morning: Presentation and GitHub readme.txt
 #%%
 import sys
 sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
@@ -50,15 +39,29 @@ class Selector():
         temp = self.principleComponentAnalysis(X_data[0],False)
         return tuple([temp]+[self.principleComponentAnalysis(X,True) for X in X_data[1:]])
 
-    def bestN(n):
+    def bestN(self,n,toNumpyFlag=False,seed=43):
+        selector = Selector(n)
         formater = DataFormater()
         baslineModels = Baseline()
+        #get data, standardize and remove outliers
+        X_train,X_validation,X_test,y_train,y_validation,y_test = formater.preProcessing(winsorize=False,standardize=True,toNumpy=toNumpyFlag,seed=43)
+        #generate novel features
+        X_train,X_validation,X_test = featureCreation_All(X_train,X_validation,X_test)
+        #standardize before PCA
+        X_train,X_validation,X_test = formater.standardizeAll(X_train,X_validation,X_test,useParams=False)
+        #apply PCA
+        X_train,X_validation,X_test = selector.pca_All(X_train,X_validation,X_test,useParams=False)
+        #standardize again for fast convergence and no exploding gradients
+        X_train,X_validation,X_test = formater.standardizeAll(X_train,X_validation,X_test,useParams=False)
+        return X_train,X_validation,X_test,y_train,y_validation,y_test
+
+
         
 def tuneNumFeatures():
     formater = DataFormater()
     baslineModels = Baseline()
     #get data, standardize and remove outliers
-    X_train,X_validation,X_test,y_train,y_validation,y_test = formater.preProcessing(winsorize=False,standardize=True)
+    X_train,X_validation,X_test,y_train,y_validation,y_test = formater.preProcessing(winsorize=False,standardize=True,seed=43)
     #generate novel features
     X_train,X_validation,X_test = featureCreation_All(X_train,X_validation,X_test)
     #standardize before PCA
@@ -73,4 +76,3 @@ def tuneNumFeatures():
         X_train1,X_validation1,X_test1 = formater.standardizeAll(X_train1,X_validation1,X_test1,useParams=False)
         print(f"Num Features:{i} Accuracy: {baslineModels.basline(X_train1,X_validation1,y_train,y_validation)[0]}")
 
-tuneNumFeatures()

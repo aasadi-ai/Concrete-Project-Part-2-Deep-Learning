@@ -1,6 +1,8 @@
+import sys
+sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
 import torch
 import numpy as np
-from architectures import *
+from Models.architectures import *
 from torch.utils.data import Dataset,DataLoader
 from sklearn.metrics import accuracy_score
 from tqdm import tqdm
@@ -14,7 +16,7 @@ class BinaryClassifier(torch.nn.Module):
     def forward(self,X):
         return self.layers(X)
 
-def train(model,trainDataLoader,valDataLoader,epochs=100,lr=0.001):
+def train(model,trainDataLoader,valDataLoader,epochs=100,lr=0.001,earlyStopping=False):
     criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(),lr)
     trainLoss = []
@@ -37,11 +39,12 @@ def train(model,trainDataLoader,valDataLoader,epochs=100,lr=0.001):
                 losses.append(criterion(model(X1).squeeze(),y1.squeeze()).item())
             valLossEpoch.append(np.mean(losses))
         trainLoss.append(np.mean(trainLossEpoch))
-        if len(valLoss)>10:
-            if valLoss[-1]>=valLoss[-10] and valLoss[-3]>=valLoss[-10]:
-                break
+        if earlyStopping:
+            if len(valLoss)>10:
+                if valLoss[-1]>=valLoss[-10] and valLoss[-3]>=valLoss[-10]:
+                    break
         valLoss.append(np.mean(valLossEpoch))
-    return trainLoss,valLoss
+    return model,trainLoss,valLoss
 
 def accuracy(model,dataloader):
     accuracies = []

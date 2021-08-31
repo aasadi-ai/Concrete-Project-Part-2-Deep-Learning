@@ -45,7 +45,7 @@ class Baseline():
 
     def knn(self,X_train,y_train,X_validation):
         '''KNN'''
-        model = KNeighborsClassifier(n_neighbors=12)
+        model = KNeighborsClassifier(n_neighbors=17)
         model.fit(X_train,y_train)
         return model.predict(X_validation)
 
@@ -58,7 +58,7 @@ class Baseline():
     def ensemble(self,X_train,y_train,X_validation):
         '''Ensemble'''
         model = VotingClassifier([
-            ("knn",KNeighborsClassifier(n_neighbors=12)),
+            ("knn",KNeighborsClassifier(n_neighbors=17)),
             ("LogisticRegression",LogisticRegression()),
             ("proto",Prototype())
             ],voting='hard')
