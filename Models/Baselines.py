@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier,VotingClassifier
-from prototypeEstimator import Prototype
+from Models.prototypeEstimator import Prototype
 from scipy import stats
 from Utilities.dataformater import DataFormater
 
@@ -65,14 +65,14 @@ class Baseline():
         model.fit(X_train,y_train)
         return model.predict(X_validation)
 
-    def basline(self,X_train,X_validation,y_train,y_validation):
+    def basline(self,X_train,X_validation,y_train,y_validation,display=False):
+        accuracies = []
         for base in [self.mode,self.prototype,self.logisticRegression,self.knn,self.gradientBoosting,self.ensemble]:
-            print(base.__doc__)
             yHat = base(X_train,y_train,X_validation)
-            print(accuracy_score(yHat,y_validation))
-            print("---------------")
-
-test = Baseline()
-utilities = DataFormater()
-X_train,X_validation,X_test,y_train,y_validation,y_test = utilities.preProcessing(toNumpy=True)
-test.basline(X_train,X_validation,y_train,y_validation)
+            accuracy = accuracy_score(yHat,y_validation)
+            accuracies.append(accuracy)
+            if display:
+                print(base.__doc__)
+                print(accuracy)
+                print("---------------")
+        return max(accuracies),accuracies[-1],accuracies

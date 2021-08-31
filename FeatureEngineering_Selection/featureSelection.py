@@ -1,14 +1,24 @@
-#Then retest baselines with RFE,PCA,None and with Windsorize,Standardize,None 9 tests
-#Settle on features for logistic regression NN
+#Hyperparameter tuning of best models and then add to ensemble
+
 #Hyperparameter tuning of simple logistic regression NN (colab)
-#Test CNN Classifier
-#Try adding conv layer, try removing conv layer
-#Hyperparameter tuning of CNN (colab)
-#Notebook walkthrough with !pip install requirements.txt and path of all modules added
+    #Add layers and do hyperparameter tuning again until no performance gains
+
+#if time:
+    #Add random seed for split function, Add random seed for RFE
+    #Test CNN Classifier
+    # Add kernels and do hyperparameter tuning of CNN (colab)
+
 #Tuesday Morning: Presentation and GitHub readme.txt
+#%%
+import sys
+sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from Models.Baselines import Baseline
 from sklearn import feature_selection
+from Utilities.dataformater import DataFormater
+from FeatureEngineering_Selection.featureEngineering import featureCreation,featureCreation_All
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.decomposition import PCA
+import numpy as np
 import pandas as pd
 
 class Selector():
@@ -39,3 +49,28 @@ class Selector():
             return [self.principleComponentAnalysis(X,True) for X in X_data]
         temp = self.principleComponentAnalysis(X_data[0],False)
         return tuple([temp]+[self.principleComponentAnalysis(X,True) for X in X_data[1:]])
+
+    def bestN(n):
+        formater = DataFormater()
+        baslineModels = Baseline()
+        
+def tuneNumFeatures():
+    formater = DataFormater()
+    baslineModels = Baseline()
+    #get data, standardize and remove outliers
+    X_train,X_validation,X_test,y_train,y_validation,y_test = formater.preProcessing(winsorize=False,standardize=True)
+    #generate novel features
+    X_train,X_validation,X_test = featureCreation_All(X_train,X_validation,X_test)
+    #standardize before PCA
+    X_train,X_validation,X_test = formater.standardizeAll(X_train,X_validation,X_test,useParams=False)
+    for i in range(1,101):
+        selector = Selector(i)
+        #apply RFE
+        #X_train,X_validation,X_test = selector.rfe_All([X_train,X_validation,X_test],[y_train,y_validation,y_test],useParams=False)
+        #apply PCA
+        X_train1,X_validation1,X_test1 = selector.pca_All(X_train,X_validation,X_test,useParams=False)
+        #standardize again for fast convergence and no exploding gradients
+        X_train1,X_validation1,X_test1 = formater.standardizeAll(X_train1,X_validation1,X_test1,useParams=False)
+        print(f"Num Features:{i} Accuracy: {baslineModels.basline(X_train1,X_validation1,y_train,y_validation)[0]}")
+
+tuneNumFeatures()

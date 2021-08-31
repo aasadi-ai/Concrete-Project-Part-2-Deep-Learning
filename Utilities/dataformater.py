@@ -1,3 +1,5 @@
+import sys
+sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
@@ -14,7 +16,7 @@ class DataFormater():
 
     def loadData(self):
         #Load Data and Rename Columns
-        df = pd.read_csv("data/concreteData.csv")
+        df = pd.read_csv("C:\\Users\\afa30\\Desktop\\concreteNet\\data\\concreteData.csv")
         df.columns = ["Cement","Slag","Ash","Water","Plasticizer","CoarseAgg","FineAgg","Age","CompressiveStrength"]
         df["CompressiveStrength"] = df["CompressiveStrength"]>= df["CompressiveStrength"].median()
         return df.iloc[:,:-1],df["CompressiveStrength"]
