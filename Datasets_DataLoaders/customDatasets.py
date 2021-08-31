@@ -14,10 +14,12 @@ class ImageFromTabular(Dataset):
             row = np.array(X.iloc[i])
             img = np.reshape(row,(28,28))
             imgScaled = utilities.standardize(img,False)*-1
-            imgs.append(torch.tensor(imgScaled))
+            img = torch.tensor(imgScaled).unsqueeze(0)
+            img = img.float()
+            imgs.append(img)
 
         self.X = torch.stack(imgs)
-        self.y = torch.tensor(np.array(y))
+        self.y = torch.tensor(np.array(y)).float()
 
     def __len__(self):
         return len(self.X)

@@ -1,6 +1,6 @@
 import sys
 sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
-from Hyperparameter_Tuning.Datasets_DataLoaders.customDatasets import TabularDataset
+from Datasets_DataLoaders.customDatasets import TabularDataset
 from Utilities.dataformater import DataFormater
 from torch.utils.data import Dataset,DataLoader
 

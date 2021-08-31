@@ -29,14 +29,14 @@ imageClassifier = torch.nn.Sequential(
     torch.nn.ReLU(),
     torch.nn.MaxPool2d(2,stride=2),
     #3
-    torch.nn.Conv2d(16,120,5),
+    torch.nn.Conv2d(16,120,3),
     #torch.nn.BatchNorm2d(120),
     torch.nn.ReLU(),
     torch.nn.MaxPool2d(2,stride=2),
     #Flatten
     torch.nn.Flatten(),
     #Linear Layers
-    torch.nn.Linear(32,64),
+    torch.nn.Linear(120,64),
     torch.nn.BatchNorm1d(64),
     torch.nn.ReLU(),
     torch.nn.Dropout(0.01),
