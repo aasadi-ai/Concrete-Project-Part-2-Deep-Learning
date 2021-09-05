@@ -1,5 +1,6 @@
-import sys
-sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from sys import path
+import os
+path.append(os.path.dirname(os.curdir))
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score

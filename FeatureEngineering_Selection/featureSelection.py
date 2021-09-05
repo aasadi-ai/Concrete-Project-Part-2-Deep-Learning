@@ -1,6 +1,7 @@
 #%%
-import sys
-sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from sys import path
+import os
+path.append(os.path.dirname(os.curdir))
 from Models.Baselines import Baseline
 from sklearn import feature_selection
 from Utilities.dataformater import DataFormater
@@ -44,7 +45,7 @@ class Selector():
         formater = DataFormater()
         baslineModels = Baseline()
         #get data, standardize and remove outliers
-        X_train,X_validation,X_test,y_train,y_validation,y_test = formater.preProcessing(winsorize=False,standardize=True,toNumpy=toNumpyFlag,seed=43)
+        X_train,X_validation,X_test,y_train,y_validation,y_test = formater.preProcessing(winsorize=False,standardize=True,seed=seed)
         #generate novel features
         X_train,X_validation,X_test = featureCreation_All(X_train,X_validation,X_test)
         #standardize before PCA
@@ -53,7 +54,9 @@ class Selector():
         X_train,X_validation,X_test = selector.pca_All(X_train,X_validation,X_test,useParams=False)
         #standardize again for fast convergence and no exploding gradients
         X_train,X_validation,X_test = formater.standardizeAll(X_train,X_validation,X_test,useParams=False)
-        return X_train,X_validation,X_test,y_train,y_validation,y_test
+        if not toNumpyFlag:
+            return X_train,X_validation,X_test,y_train,y_validation,y_test
+        return np.array(X_train),np.array(X_validation),np.array(X_test),np.array(y_train),np.array(y_validation),np.array(y_test)
 
 
         

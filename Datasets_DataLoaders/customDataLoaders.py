@@ -1,5 +1,6 @@
-import sys
-sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from sys import path
+import os
+path.append(os.path.dirname(os.curdir))
 from Datasets_DataLoaders.customDatasets import TabularDataset
 from Utilities.dataformater import DataFormater
 from torch.utils.data import Dataset,DataLoader

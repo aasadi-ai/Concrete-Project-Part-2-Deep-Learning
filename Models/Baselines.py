@@ -1,5 +1,6 @@
-import sys
-sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from sys import path
+import os
+path.append(os.path.dirname(os.curdir))
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
@@ -45,20 +46,20 @@ class Baseline():
 
     def knn(self,X_train,y_train,X_validation):
         '''KNN'''
-        model = KNeighborsClassifier(n_neighbors=17)
+        model = KNeighborsClassifier()
         model.fit(X_train,y_train)
         return model.predict(X_validation)
 
     def gradientBoosting(self,X_train,y_train,X_validation):
         '''GradientBoosting'''
-        model = GradientBoostingClassifier(n_estimators=250,max_depth=3)
+        model = GradientBoostingClassifier()
         model.fit(X_train,y_train)
         return model.predict(X_validation)
 
     def ensemble(self,X_train,y_train,X_validation):
         '''Ensemble'''
         model = VotingClassifier([
-            ("knn",KNeighborsClassifier(n_neighbors=17)),
+            ("knn",KNeighborsClassifier()),
             ("LogisticRegression",LogisticRegression()),
             ("proto",Prototype())
             ],voting='hard')

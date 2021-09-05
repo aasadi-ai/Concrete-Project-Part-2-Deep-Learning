@@ -1,5 +1,6 @@
-import sys
-sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from sys import path
+import os
+path.append(os.path.dirname(os.curdir))
 import torch
 import numpy as np
 from Models.architectures import *

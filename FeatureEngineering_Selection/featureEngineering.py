@@ -1,5 +1,6 @@
-import sys
-sys.path.append("C:\\Users\\afa30\\Desktop\\concreteNet")
+from sys import path
+import os
+path.append(os.path.dirname(os.curdir))
 from Utilities.dataformater import DataFormater
 import numpy as np
 import pandas as pd
