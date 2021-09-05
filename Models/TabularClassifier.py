@@ -1,12 +1,8 @@
-from sys import path
-path.append("..")
-import os
 import torch
-from sklearn.metrics import accuracy_score
 
 class TabularClassifier(torch.nn.Module):
     def __init__(self,l1=16,l2=32,l3=64):
-        super().__init__()
+        super(TabularClassifier,self).__init__()
         self.layers = torch.nn.Sequential(
             #1
             torch.nn.Linear(8,l1),
@@ -27,15 +23,6 @@ class TabularClassifier(torch.nn.Module):
             torch.nn.Linear(l3,1),
             torch.nn.Sigmoid()
         )
+    def forward(self,X):
+        return self.layers(X)
 
-def train_custom(config,checkpoint_dir=None,data_dir=None):
-    model = TabularClassifier(config["l1"],config["l2"],config["l3"])
-    criterion = torch.nn.BCELoss()
-    optimizer = torch.optim.SGD(model.parameters(),lr=config["lr"],momentum=0.9)
-
-    if checkpoint_dir:
-        model_state, optimizer_state = torch.load(os.path.join(checkpoint_dir,"checkpoint"))
-        model.load_state_dict(model_state)
-        optimizer.load_state_dict(optimizer_state)
-
-    

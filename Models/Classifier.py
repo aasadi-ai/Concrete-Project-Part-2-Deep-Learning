@@ -40,6 +40,7 @@ def train(model,trainDataLoader,valDataLoader,epochs=100,lr=0.001,earlyStopping=
                 losses.append(criterion(model(X1).squeeze(),y1.squeeze()).item())
             valLossEpoch.append(np.mean(losses))
         trainLoss.append(np.mean(trainLossEpoch))
+        
         if earlyStopping:
             if len(valLoss)>10:
                 if valLoss[-1]>=valLoss[-10] and valLoss[-3]>=valLoss[-10]:
