@@ -91,3 +91,4 @@ class DataFormater():
         img = (img-min)/(max-min)
         img*=255
         return Image.fromarray(img)
+

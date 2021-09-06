@@ -61,7 +61,8 @@ class Baseline():
         model = VotingClassifier([
             ("knn",KNeighborsClassifier()),
             ("LogisticRegression",LogisticRegression()),
-            ("proto",Prototype())
+            ("proto",Prototype()),
+            ("grad",GradientBoostingClassifier())
             ],voting='hard')
         model.fit(X_train,y_train)
         return model.predict(X_validation)
@@ -77,3 +78,6 @@ class Baseline():
                 print(accuracy)
                 print("---------------")
         return max(accuracies),accuracies[-1],accuracies
+
+X_train,X_validation,_,y_train,y_validation,_ = DataFormater().preProcessing(toNumpy=True)
+Baseline().basline(X_train,X_validation,y_train,y_validation,display=True)
