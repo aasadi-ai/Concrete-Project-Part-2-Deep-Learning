@@ -2,7 +2,9 @@ import numpy as np
 from sklearn.base import BaseEstimator,ClassifierMixin
  
 class Prototype(BaseEstimator,ClassifierMixin):
-    '''Prototype Estimator Class'''
+    '''Custom sklearn Estimator for classification. 
+    Computes class averages(prototypes) and classifies based on nearest class prototype.
+    '''
     def __init__(self):
         self.positivePrototype = None
         self.negativePrototype = None

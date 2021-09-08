@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score
 from tqdm import tqdm
 
 class BinaryClassifier(torch.nn.Module):
+    '''Generic binary classifier and train method with swappable architecture'''
     def __init__(self,architecture):
         super().__init__()
         architectures = {"tab":tabularClassifier,"img":imageClassifier}

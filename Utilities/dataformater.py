@@ -11,6 +11,13 @@ import torch
 from PIL import Image
 
 class DataFormater():
+    '''This class contains methods for dealing with data. 
+            -Loads data
+            -Splits data
+            -Removes outliers
+            -Standardizes data
+            -Reformats data
+        '''
     def __init__(self):
         self.currentMean = None
         self.currentStd = None
@@ -40,6 +47,7 @@ class DataFormater():
         return X_train,X_validation,X_test,y_train,y_validation,y_test
     
     def preProcessing(self,winsorize=False,standardize=True,toNumpy=False,seed=43):
+        #loads, splits, winsorizes and standardizes data, prepares it for torch dataset
         X,y = self.loadData()
         X_train,X_validation,X_test,y_train,y_validation,y_test = self.splitData(X,y,seed=seed)
         if winsorize:
@@ -55,19 +63,21 @@ class DataFormater():
         return X_train,X_validation,X_test,y_train,y_validation,y_test
        
     def standardize(self,X,useParams=True):
+        #standardizes data, can use existing params
         if not useParams:
             self.currentMean = X.mean(0)
             self.currentStd = X.std(0)
         return (X-self.currentMean)/(self.currentStd+0.00001)
 
     def standardizeAll(self,*X_data,useParams=False):
+        #extends standardize to iterable
         if useParams:
             return [self.standardize(X,True) for X in X_data]
         temp = self.standardize(X_data[0],False)
         return tuple([temp]+[self.standardize(X,True) for X in X_data[1:]])
 
     def winsorizeOutlier(self,X,limits=(0.03,0.03),useParams=True):
-        #X = X.copy()
+        #Winsorizes outliers instead of dropping
         def winsorize(col):
             sortedCol = col.sort_values(ascending=True)
             bottomLimit = sortedCol[int(len(sortedCol)*limits[0])]
@@ -85,7 +95,7 @@ class DataFormater():
         return X
 
     def visualizeImg(self,img):
-    #reshape row and scale image
+    #Converts an array to img
         max = np.amax(img)
         min = np.amin(img)
         img = (img-min)/(max-min)

@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 
 def featureCreation(X):
+    '''Creates several new features by combing old features, and applying transforms to original features.
+        This function is used to transform feature vectors to Images.
+    '''
     epsilon = 0.0001
     oneVarFunctions = {"cbrt":np.cbrt,"sin":np.sin,"sqr":np.square}
     twoVarFunctions = {"sub":np.subtract,"prod":np.multiply,"div":np.divide}
