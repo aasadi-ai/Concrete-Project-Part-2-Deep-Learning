@@ -1,6 +1,7 @@
 import torch
 
 class TabularClassifier(torch.nn.Module):
+    '''Simple 'Linear' Model for dealing with tabular data'''
     def __init__(self,l1=16,l2=32,l3=64,l4=128):
         super(TabularClassifier,self).__init__()
         self.layers = torch.nn.Sequential(

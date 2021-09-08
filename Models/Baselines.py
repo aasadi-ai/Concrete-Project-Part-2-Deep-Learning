@@ -12,6 +12,7 @@ from scipy import stats
 from Utilities.dataformater import DataFormater
 
 class Baseline():
+    '''Contains methods for establishing a baseline using simple off the shelf estimators'''
     def __init__(self):
         pass
 
@@ -78,6 +79,3 @@ class Baseline():
                 print(accuracy)
                 print("---------------")
         return max(accuracies),accuracies[-1],accuracies
-
-X_train,X_validation,_,y_train,y_validation,_ = DataFormater().preProcessing(toNumpy=True)
-Baseline().basline(X_train,X_validation,y_train,y_validation,display=True)

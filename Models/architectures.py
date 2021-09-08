@@ -1,5 +1,6 @@
 import torch
 
+'''Contains NN architectures to be used by BinaryClassifier'''
 tabularClassifier = torch.nn.Sequential(
             torch.nn.Linear(8,16),
             torch.nn.BatchNorm1d(16),

@@ -12,6 +12,12 @@ import numpy as np
 import pandas as pd
 
 class Selector():
+    '''Class implements methods for dimensionality reduction/feature elimination.
+        -Recursive Feature Elimination
+        -Principle Component Analysis
+        -bestN: Selects top N feautres
+        -tuneNumFeatures: Compares accuracy of models build using upto N features
+    '''
     def __init__(self,numFeatures=5):
         self.featureSelector = feature_selection.RFE(estimator=DecisionTreeRegressor(),n_features_to_select=numFeatures)
         self.pca = PCA(n_components=numFeatures)
